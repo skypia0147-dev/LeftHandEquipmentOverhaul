@@ -11,6 +11,7 @@ Since 2.0 it is a single SKSE plugin. The ESP, Dynamic Animation Casting, Behavi
 - SKSE
 - Address Library for SKSE Plugins
 - Skyrim SE 1.5.97 / AE 1.6.x / 1.7.x
+- Left-hand gear swap animations: Open Animation Replacer, Open Animation Replacer - IED Conditions, Immersive Equipment Displays
 
 ## Annotations for animators
 

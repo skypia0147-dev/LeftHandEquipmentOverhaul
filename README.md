@@ -11,6 +11,7 @@
 - SKSE
 - Address Library for SKSE Plugins
 - Skyrim SE 1.5.97 / AE 1.6.x / 1.7.x
+- 왼손 장비 교체 애니메이션: Open Animation Replacer, Open Animation Replacer - IED Conditions, Immersive Equipment Displays
 
 ## 애니메이터용 주석
 

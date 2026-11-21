@@ -1,0 +1,10 @@
+{
+    "name": "left-hand-equipment-overhaul",
+    "version-string": "2.0.0",
+    "dependencies": [
+        "spdlog",
+        "fmt",
+        "rapidcsv",
+        "directxtk"
+    ]
+}

@@ -1,0 +1,27 @@
+# Build
+build/
+bin/
+obj/
+out/
+.cmake/
+
+# Dependencies
+vcpkg_installed/
+vcpkg/
+
+# IDE
+.vs/
+.vscode/
+*.user
+*.suo
+*.sln
+
+# Previous deployed DLL (one copy)
+backups/
+
+# Release packages
+release/
+dist/
+
+# Logs
+*.log

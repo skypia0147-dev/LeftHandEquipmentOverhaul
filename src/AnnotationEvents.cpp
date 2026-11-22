@@ -28,7 +28,27 @@ void MakeString(RE::hkStringPtr& a_dst, const char* a_text) {
     ctor(&a_dst, a_text);
 }
 
-// eventNames and eventInfos are parallel arrays; both grow by one or neither does.
+const char* GraphName(RE::hkbBehaviorGraph* a_graph) {
+    const char* s = a_graph ? a_graph->name.c_str() : nullptr;
+    return s && *s ? s : "?";
+}
+
+// eventNames and eventInfos are parallel arrays: event i's flags are eventInfos[i]. Another behavior mod or patcher
+// can hand over a graph with fewer infos than names (reported: 250 infos, 251 names). Those names have no flags at
+// all, so they get the default (0, a plain event) first; then the graph takes ours like any other.
+void FillMissingInfos(RE::hkbBehaviorGraph* a_graph) {
+    auto* data = a_graph ? a_graph->data.get() : nullptr;
+    if (!data || !data->stringData.get()) return;
+    auto& names = data->stringData->eventNames;
+    auto& infos = data->eventInfos;
+    if (!names._data || infos._size >= names._size) return;
+    const int before = infos._size;
+    while (infos._size < names._size) infos.push_back(RE::hkbEventInfo{});
+    logger::warn("graph '{}': eventInfos ({}) < eventNames ({}); {} filled with default flags", GraphName(a_graph),
+        before, names._size, infos._size - before);
+}
+
+// Both arrays grow by one or neither does.
 bool AddEvent(RE::hkbBehaviorGraph* a_graph, const char* a_name) {
     auto* data = a_graph ? a_graph->data.get() : nullptr;
     if (!data || !data->stringData.get()) return false;
@@ -36,7 +56,9 @@ bool AddEvent(RE::hkbBehaviorGraph* a_graph, const char* a_name) {
     if (!names._data || FindName(names, a_name) >= 0) return false;
     auto& infos = data->eventInfos;
     if (infos._size != names._size) {
-        logger::warn("eventInfos ({}) != eventNames ({}); '{}' not added", infos._size, names._size, a_name);
+        // More infos than names: which one belongs to which name is unknown, so the graph is left as it is.
+        logger::warn("graph '{}': eventInfos ({}) != eventNames ({}); '{}' not added", GraphName(a_graph), infos._size,
+            names._size, a_name);
         return false;
     }
     if (names._size >= names.capacity()) names.reserve(names._size + 8);
@@ -59,8 +81,10 @@ SymbolIdMap* OnCreateSymbolIdMap(RE::hkbBehaviorGraph* a_master, const RE::BSScr
     const bool fresh = a_master && a_master->data.get() && !a_master->eventIDMap.get() && !a_master->variableIDMap.get();
     if (fresh && a_project && _strnicmp(a_project, "Actors\\Character", 16) == 0) {
         int added = 0;
-        for (std::uint32_t i = 0; i < a_graphs.size(); ++i)
+        for (std::uint32_t i = 0; i < a_graphs.size(); ++i) {
+            FillMissingInfos(a_graphs[i]);
             for (const char* name : kNames) added += AddEvent(a_graphs[i], name) ? 1 : 0;
+        }
         logger::info("events registered in '{}': {} added over {} graphs", a_project, added, a_graphs.size());
     }
     return g_create(a_master, a_graphs, a_project, a_character, a_events, a_variables);

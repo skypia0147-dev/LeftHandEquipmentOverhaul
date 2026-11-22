@@ -34,13 +34,13 @@ void MessageHandler(SKSE::MessagingInterface::Message* a_msg) {
 
 }  // namespace
 
-SKSEPluginInfo(.Version = {2, 0, 0, 0}, .Name = "LeftHandEquipmentOverhaul", .Author = "Smooth",
+SKSEPluginInfo(.Version = {2, 0, 1, 0}, .Name = "LeftHandEquipmentOverhaul", .Author = "Smooth",
     .RuntimeCompatibility = SKSE::VersionIndependence::AddressLibrary)
 
 SKSEPluginLoad(const SKSE::LoadInterface* a_skse) {
     InitializeLog();
     SKSE::Init(a_skse);
-    logger::info("Left Hand Equipment Overhaul 2.0.0, runtime {}", REL::Module::get().version().string());
+    logger::info("Left Hand Equipment Overhaul 2.0.1, runtime {}", REL::Module::get().version().string());
     SKSE::AllocTrampoline(64);
     // Before any behavior project loads: the main menu character loads graphs before kDataLoaded.
     LHEO::AnnotationEvents::InstallRegistration();

@@ -10,7 +10,7 @@ set(BUILD_TESTS OFF CACHE BOOL "" FORCE)
 set(CMAKE_EXPORT_COMPILE_COMMANDS ON)
 set(CMAKE_MSVC_RUNTIME_LIBRARY "MultiThreaded$<$<CONFIG:Debug>:Debug>")
 
-project(LeftHandEquipmentOverhaul VERSION 2.0.0)
+project(LeftHandEquipmentOverhaul VERSION 2.0.1)
 
 set(CMAKE_CXX_STANDARD 23)
 set(CMAKE_CXX_STANDARD_REQUIRED ON)
